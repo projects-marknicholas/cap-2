@@ -1,0 +1,32 @@
+/* =======================================
+  Breakpoints 
+
+  
+  Breakpoint	          	Dimensions
+  X-Small		              <576px
+  Small		                ≥576px
+  Medium		              ≥768px
+  Large		                ≥992px
+  Extra large		          ≥1200px
+  Extra extra large		    ≥1400px
+========================================*/
+
+:root{
+  --white: #FFFFFF;
+  --black: #000000;
+}
+ul{
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+}
+ul li{
+  list-style: none;
+}
+ul li a{
+  text-decoration: none;
+}
+ul li a:active,
+ul li a:focus{
+  background-color: var(--black);
+  color: var(--white);
+}

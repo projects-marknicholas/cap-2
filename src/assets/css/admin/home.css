@@ -1,0 +1,61 @@
+:root{
+  --bg: #f9f9f9;
+}
+.admin-section{
+  height: calc(100vh - 40px);
+  padding: 20px;
+  background-color: var(--bg);
+  display: flex;
+  flex-direction: column;
+}
+.admin-divider{
+  height: 100%;
+  overflow: auto;
+  display: flex;
+  margin-top: 20px;
+}
+.admin-divider .admin-main{
+  margin-left: 20px;
+  width: 100%;
+  flex-grow: 1;
+}
+.admin-divider .admin-main .admin-dash-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 20px;
+}
+.admin-divider .admin-main .admin-dash-grid .item {
+  background-color: var(--white);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 20px;
+}
+.admin-divider .admin-main .admin-dash-grid .item  p{
+  font-style: italic;
+  font-size: .868em;
+  color: var(--grey);
+}
+.admin-divider .admin-main .admin-dash-grid .item h1{
+  margin: 12px 0;
+  color: var(--red);
+  font-size: 2.2em;
+  font-weight: 500;
+}
+.admin-divider .admin-main .admin-dash-grid .item i{
+  font-style: italic;
+}
+.admin-divider .admin-main .admin-dash-grid .item i span.up{
+  color: var(--green);
+  font-weight: bold;
+}
+.admin-divider .admin-main .admin-dash-grid .item i span.down{
+  color: var(--danger);
+  font-weight: bold;
+}
+.admin-divider .admin-main .graph{
+  background-color: var(--white);
+  padding: 20px;
+  margin-top: 20px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+}

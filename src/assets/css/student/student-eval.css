@@ -1,0 +1,68 @@
+.student-evaluation{
+  margin-top: 30px;
+  padding: 20px;
+  border-radius: 8px;
+  background-color: var(--white);
+  border: 1px solid var(--border);
+  box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+  margin-bottom: 30px;
+}
+.student-evaluation h1{
+  font-size: 1.5em;
+}
+.student-evaluation .data-table{
+  margin-top: 30px;
+  overflow: auto;
+}
+.student-evaluation .data-table table{
+  border-collapse: collapse;
+  width: 100%;
+}
+.student-evaluation .data-table table th{
+  background-color: #F3F4F6;
+  color: var(--gray);
+  text-align: left;
+  padding: 12px;
+  font-size: .868em;
+}
+.student-evaluation .data-table table td{
+  text-align: left;
+  padding: 12px;
+  color: var(--gray);
+  font-size: .868em;
+}
+.student-evaluation .data-table table tr.passed{
+  background-color: #EFF6FF;
+}
+.student-evaluation .data-table table tr.failed{
+  background-color: #FEF2F2;
+}
+.student-evaluation .data-table table tr.enrolled{
+  background-color: #F0FDF4;
+}
+
+.student-curriculum-header{
+  padding: 20px 0;
+}
+.student-curriculum-header .flex-curriculum{
+  display: flex;
+  align-items: center;
+}
+.student-curriculum-header .flex-curriculum select{
+  border: 1px solid var(--border);
+  padding: 12px;
+  margin-top: 12px;
+  margin-right: 12px;
+  border-radius: 12px;
+  cursor: pointer;
+}
+
+@media(max-width: 768px){
+  .student-evaluation,
+  .student-curriculum-header{
+    margin: 12px;
+  }
+  .student-evaluation h1{
+    font-size: 1.2em;
+  }
+}

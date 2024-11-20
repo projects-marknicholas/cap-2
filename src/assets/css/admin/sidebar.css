@@ -1,0 +1,24 @@
+.admin-section .admin-divider .admin-sidebar{
+  background-color: var(--white);
+  border: 1px solid var(--border);
+  padding: 10px;
+  border-radius: 12px;
+  height: calc(100% - 22px);
+}
+.admin-section .admin-divider .admin-sidebar .link-group{
+  margin-bottom: 8px;
+}
+.admin-section .admin-divider .admin-sidebar .link-group a{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: auto;
+  padding: 12px;
+} 
+.admin-section .admin-divider .admin-sidebar .link-group a.active{
+  background-color: var(--red-fade);
+  border-radius: 8px;
+}
+.admin-section .admin-divider .admin-sidebar .link-group a.active img {
+  filter: brightness(0) saturate(100%) invert(9%) sepia(92%) saturate(3093%) hue-rotate(354deg) brightness(110%) contrast(119%);
+}

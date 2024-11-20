@@ -1,0 +1,129 @@
+.auth{
+  height: 100vh;
+  width: 100%;
+  overflow: auto;
+  background: var(--red);
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+.auth form {
+  background-color: var(--white);
+  border: 1px solid var(--border);
+  width: calc(600px - 100px);
+  padding: 60px;
+  border-radius: 12px;
+  margin: auto;
+  margin-top: 50px;
+  margin-bottom: 50px;
+}
+.auth form .logo {
+  display: flex;
+  align-items: center;
+}
+.auth form .logo h1{
+  font-weight: normal;
+  font-size: 1em;
+  margin-left: 12px;
+  color: var(--red);
+  font-weight: 500;
+}
+
+.auth form .header{
+  margin: 50px 0;
+  line-height: 1.5;
+}
+.auth form .header h1{
+  font-weight: 500;
+  font-size: 1.2em;
+}
+.auth form .header p{
+  font-size: .868em;
+  color: var(--grey);
+}
+
+.auth form label,
+.auth form label span{
+  display: block;
+}
+.auth form label span{
+  font-size: .868em;
+  font-weight: 500;
+}
+.auth form label input{
+  margin: 12px 0;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  padding: 12px;
+  font-size: .9em;
+  width: calc(100% - 26px);
+}
+.auth form label input:focus{
+  outline: 1px solid var(--red);
+}
+
+
+.auth form .log-btn{
+  margin-top: 12px;
+  display: block;
+}
+.auth form .log-btn .forgot{
+  display: flex;
+  align-items: center;
+}
+.auth form .log-btn .forgot a{
+  margin-left: auto;
+  margin-right: 0;
+  margin-bottom: 24px;
+  text-decoration: none;
+  color: var(--red);
+  font-size: .868em;
+  font-weight: 500;
+}
+.auth form .log-btn button.log{
+  background-color: var(--red);
+  color: var(--white);
+  padding: 12px;
+  border: none;
+  border-radius: 8px;
+  width: 100%;
+  outline: none;
+  cursor: pointer;
+} 
+.auth form .log-btn button.sign{
+  background-color: var(--light);
+  border: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  width: 100%;
+  padding: 12px;
+  outline: none;
+  cursor: pointer;
+  margin-top: 12px;
+}
+.auth form .log-btn button.sign img{
+  margin-right: 12px;
+}
+.auth form .log-btn span{
+  display: block;
+  text-align: center;
+  margin-top: 12px;
+  font-size: .868em;
+  color: var(--gray);
+}
+.auth form .log-btn span a{
+  color: var(--red);
+  text-decoration: none;
+  font-weight: 500;
+}
+
+
+@media(max-width: 768px){
+  .auth form{
+    width: calc(100% - 42px);
+    border-radius: 0;
+    padding: 40px 20px;
+  }
+}

@@ -1,0 +1,14 @@
+:root{
+  --danger: #DC3545;
+  --success: #0BB94E;
+  --view: #F1B50F;
+  --red: #800000;
+  --red-fade: #F1ADAE;
+  --green: #008017;
+  --white: #FFFFFF;
+  --light: #F4F4F4;
+  --grey: #838383;
+  --gray: #474747;
+  --black: #000000;
+  --border: rgba(0,0,0,0.2);
+}

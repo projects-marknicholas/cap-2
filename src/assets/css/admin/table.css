@@ -1,0 +1,194 @@
+.table-holder .table-header .search-bar{
+  display: flex;
+  align-items: center;
+}
+.table-holder{
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  background-color: var(--white);
+}
+.table-holder .table-header{
+  display: flex;
+  align-items: center;
+  padding: 12px 20px;
+}
+.table-holder .table-header .table-btns a{
+  text-decoration: none;
+  color: var(--white);
+  background-color: var(--red);
+  padding: 8px 12px;
+  border-radius: 5px;
+  font-size: .8em;
+}
+.table-holder .table-header a.add{
+  text-decoration: none;
+  color: var(--white);
+  background-color: var(--green);
+  font-size: .868em;
+  margin-left: 12px;
+  padding: 8px 12px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+.table-holder .table-header .search-bar{
+  width: fit-content;
+  margin-left: auto;
+  margin-right: 0;
+  border: 1px solid var(--border);
+  padding: 8px;
+  border-radius: 8px;
+}
+.table-holder .table-header .search-bar:focus-within {
+  outline: 1px solid var(--red);
+}
+.table-holder .table-header .search-bar svg{
+  height: 20px;
+  color: #a19e9e;
+}
+.table-holder .table-header .search-bar input{
+  border: none;
+  outline: none;
+  font-size: .868em;
+  margin-left: 8px;
+  width: 200px;
+}
+.table-holder .table-header .search-bar input::placeholder{
+  color: #a19e9e;
+}
+
+
+.table-holder .table-scrolling {
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  overflow: auto;
+}
+.table-holder .table-scrolling table {
+  width: 100%;
+  border-collapse: collapse;
+}
+.table-holder .table-scrolling table thead {
+  background-color: #eeeeee;
+}
+.table-holder .table-scrolling table thead tr th {
+  padding: 12px;
+  font-size: .868em;
+  font-weight: 600;
+  text-align: left;
+  border-bottom: 1px solid var(--border);
+  white-space: nowrap;
+}
+.table-holder .table-scrolling table tbody tr td {
+  padding: 0px 8px;
+  font-size: .868em;
+  color: var(--theme-gray);
+  white-space: nowrap;
+  border: none;
+  text-align: left;
+}
+.table-holder .table-scrolling table tbody tr td select{
+  padding: 5px 8px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  cursor: pointer;
+}
+.table-holder .table-scrolling table tbody tr td img{
+  height: 30px;
+  border-radius: 5px;
+}
+.table-holder .table-scrolling table tbody tr td.action-field{
+  display: grid;
+  grid-template-columns: repeat(3, auto);
+  width: fit-content;
+}
+.table-holder .table-scrolling table tbody tr td a{
+  color: var(--black);
+  font-weight: bold;
+}
+.table-holder .table-scrolling table tbody tr td button{
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  color: var(--theme-gray);
+  margin: 5px;
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  border-radius: 5px;
+  padding: 8px;
+  width: fit-content;
+}
+.table-holder .table-scrolling table tbody tr td button img{
+  margin-right: 8px;
+  height: 16px;
+  filter: brightness(0) saturate(100%) invert(100%) sepia(0%) saturate(7500%) hue-rotate(182deg) brightness(100%) contrast(99%);
+}
+.table-holder .table-scrolling table tbody tr td button.accept{
+  background-color: var(--success);
+  color: var(--white);
+}
+.table-holder .table-scrolling table tbody tr td button.decline{
+  background-color: var(--danger);
+  color: var(--white);
+}
+.table-holder .table-scrolling table tbody tr td button.view{
+  background-color: var(--view);
+  color: var(--white);
+}
+.table-holder .table-scrolling table tbody tr td button.print{
+  background-color: var(--lightblue);
+  color: var(--white);
+}
+
+.table-holder .table-footer{
+  padding: 20px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  font-size: .938em;
+  font-weight: 500;
+  color: var(--theme-gray);
+}
+.table-holder .table-footer .center{
+  text-align: center;
+  display: block;
+  margin: auto;
+}
+.table-holder .table-footer .center select{
+  padding: 8px;
+  border-radius: 8px;
+  border: 1px solid rgba(0,0,0,0.2);
+  outline: none;
+  font-size: .868em;
+}
+.table-holder .table-footer .center select:focus {
+  outline: 2px solid var(--red);
+}
+.table-holder .table-footer .right{
+  text-align: right;
+}
+.table-holder .table-footer .ck-btn{
+  display: flex;
+  justify-content: flex-end;
+}
+.table-holder .table-scrolling table tbody tr td button.load-more{
+  color: var(--lightblue);
+  display: block;
+  margin: auto;
+  margin-top: 12px;
+  margin-bottom: 12px;
+}
+.load-more{
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  color: var(--theme-gray);
+  margin: 5px;
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  border-radius: 5px;
+  padding: 8px;
+  width: fit-content;
+  background-color: var(--red);
+  color: var(--white);
+}

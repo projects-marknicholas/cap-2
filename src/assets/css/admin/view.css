@@ -1,0 +1,214 @@
+.admin-pop-overlay{
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  width: 100%;
+  background-color: rgba(0,0,0,0.8);
+  overflow: auto;
+}
+.admin-pop-overlay .admin-pop-close{
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  background-color: var(--white);
+  font-size: 1em;
+  padding: 12px 24px;
+  border-radius: 8px;
+  border: none;
+  outline: none;
+  cursor: pointer;
+}
+.admin-pop-overlay .admin-subject-pop{
+  width: calc(600px - 40px);
+  padding: 20px;
+  background-color: var(--white);
+  margin: auto;
+  border-radius: 12px;
+  margin-top: 50px;
+  margin-bottom: 50px;
+  overflow: hidden;
+}
+.admin-pop-overlay .admin-subject-pop .header{
+  font-size: 1.2em;
+  font-weight: 500;
+  padding-bottom: 20px;
+  border-bottom: 1px solid var(--border);
+}
+.admin-pop-overlay .form-group{
+  margin-top: 20px;
+}
+.admin-pop-overlay .form-group .form-group-grid{
+  display: grid;
+  grid-template-columns: repeat(1, 1fr);
+  gap: 12px;
+  margin-top: 12px;
+}
+.admin-pop-overlay .form-group .form-group-grid2{
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+}
+.admin-pop-overlay .form-group .form-group-grid label p,
+.admin-pop-overlay .form-group .form-group-grid2 label p{
+  font-size: .868em;
+  color: var(--gray);
+  font-style: italic;
+}
+.admin-pop-overlay .form-group .form-group-grid label input,
+.admin-pop-overlay .form-group .form-group-grid2 label input{
+  padding: 12px;
+  border-radius: 8px;
+  width: calc(100% - 24px);
+  border: 1px solid var(--border);
+  margin-top: 6px;
+  outline: none;
+}
+.admin-pop-overlay .form-group .form-group-grid label select,
+.admin-pop-overlay .form-group .form-group-grid2 label select{
+  padding: 12px;
+  border-radius: 8px;
+  width: 100%;
+  border: 1px solid var(--border);
+  margin-top: 6px;
+  outline: none;
+}
+.admin-pop-overlay .admin-sub-pop{
+  display: flex;
+  align-items: center;
+  margin-top: 20px;
+}
+.admin-pop-overlay .admin-sub-pop button{
+  margin-left: auto;
+  margin-right: 0;
+  padding: 8px 12px;
+  cursor: pointer;
+  border: none;
+  border-radius: 8px;
+  background-color: var(--view);
+  color: var(--white);
+  font-size: .868em;
+}
+.admin-pop-overlay .add-input{
+  display: flex;
+  align-items: center;
+  margin-top: 12px;
+}
+.admin-pop-overlay .add-input button{
+  margin-left: auto;
+  margin-right: 0;
+  padding: 8px 12px;
+  cursor: pointer;
+  border: none;
+  border-radius: 8px;
+  background-color: var(--red-fade);
+  color: var(--red);
+  font-size: .868em;
+}
+
+
+
+
+.admin-pop-overlay .admin-subject-pop .filters{
+  margin-top: 20px;
+  display: flex;
+  align-items: center;
+}
+.admin-pop-overlay .admin-subject-pop .filters input{
+  padding: 12px;
+  border: 1px solid var(--border);
+  outline: none;
+  border-radius: 8px;
+  width: calc(100% - 26px);
+}
+.admin-pop-overlay .admin-subject-pop .filters select{
+  padding: 12px;
+  border: 1px solid var(--border);
+  outline: none;
+  border-radius: 8px;
+  width: fit-content;
+  margin-left: 12px;
+}
+.admin-pop-overlay .admin-subject-pop .subs{
+  margin-top: 20px;
+  overflow: auto;
+}
+.admin-pop-overlay .admin-subject-pop .subs {
+  margin-top: 20px;
+  overflow: auto;
+}
+.admin-pop-overlay .admin-subject-pop button{
+  margin-top: 12px;
+  padding: 8px 12px;
+  border-radius: 8px;
+  cursor: pointer;
+  border: none;
+  outline: none;
+  color: var(--white);
+  background-color: var(--view);
+}
+.admin-pop-overlay .admin-subject-pop .subs table {
+  border-collapse: collapse;  
+  width: 100%;
+}
+.admin-pop-overlay .admin-subject-pop .subs table th,
+.admin-pop-overlay .admin-subject-pop .subs table td {
+  border: 1px solid var(--border); 
+  padding: 12px;
+  text-align: left;
+  color: var(--gray);
+  font-size: .868em;
+  word-wrap: normal;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.admin-pop-overlay .admin-subject-pop .subs table tbody tr td .output,
+.admin-pop-overlay .admin-subject-pop .subs table tbody tr td input {
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 8px;
+  outline: none;
+  margin-left: 8px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.admin-pop-overlay .admin-subject-pop .subs table tbody tr td button {
+  border: none;
+  border-radius: 8px;
+  height: 34px;
+  width: 34px;
+  background-color: var(--red-fade);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.admin-pop-overlay .admin-subject-pop .subs table tbody tr td button img {
+  height: 16px;
+  filter: brightness(0) saturate(100%) invert(30%) sepia(29%) saturate(4074%) hue-rotate(329deg) brightness(94%) contrast(97%);
+}
+
+
+
+
+.assign-subject-dropdown{
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  margin-top: 12px;
+  padding: 8px;
+}
+.assign-subject-dropdown ul{
+  list-style: none;
+}
+.assign-subject-dropdown ul li{
+  cursor: pointer;
+  padding: 12px;
+  border-radius: 8px;
+  transition: ease-in-out .2s;
+}
+.assign-subject-dropdown ul li:hover{
+  background-color: var(--view);
+  color: var(--white);
+}

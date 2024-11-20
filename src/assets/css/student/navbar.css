@@ -1,0 +1,28 @@
+nav{
+  background-color: var(--red);
+  padding: 20px;
+  display: flex;
+  align-items: center;
+}
+nav .left h1{
+  color: var(--white);
+  margin-left: 12px;
+  font-size: 1.2em;
+}
+nav .right{
+  margin-left: auto;
+  margin-right: 0;
+  display: flex;
+}
+nav .left,
+nav .right .nav-group{
+  display: flex;
+  align-items: center;
+}
+nav .right .nav-group a{
+  text-decoration: none;
+  color: var(--white);
+  font-weight: 500;
+  font-size: .968em;
+  margin: 0 12px;
+}

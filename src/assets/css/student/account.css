@@ -1,0 +1,129 @@
+.account-settings{
+  width: calc(600px - 40px);
+  background-color: var(--white);
+  margin: auto;
+  border-radius: 12px;
+  margin-top: 50px;
+  border: 1px solid var(--border);
+  padding: 20px;
+}
+.account-settings .as-header p{
+  color:  var(--grey);
+  line-height: 1.5;
+  margin-top: 4px;
+}
+.account-settings .change-photo{
+  margin: auto;
+  margin-top: 30px;
+  margin-bottom: 30px;
+  width: fit-content;
+}
+.account-settings .change-photo .image{
+  height: 80px;
+  width: 80px;
+  background-color: var(--grey);
+  border-radius: 100px;
+  overflow: hidden;
+  margin: auto;
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.account-settings .change-photo .image img{
+  height: 100%;
+  width: auto;
+  max-width: 100%; 
+  object-fit: cover;
+}
+.account-settings .change-photo button{
+  position: relative;
+  background-color: transparent;
+  border: 1px solid var(--border);
+  padding: 8px 12px;
+  border-radius: 100px;
+  color: var(--grey);
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+}
+.account-settings .change-photo button img{
+  margin-right: 8px;
+}
+.account-settings .change-photo button input{
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  cursor: pointer;
+  opacity: 0;
+}
+.account-settings .grid-input{
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+}
+.account-settings .grid-input .item p{
+  font-weight: 600;
+  font-size: .868em;
+}
+.account-settings .grid-input .item input{
+  margin-top: 5px;
+  padding: 12px;
+  width: calc(100% - 24px);
+  outline: none;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+}
+.account-settings .account-status{
+  margin-top: 30px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 12px;
+  display: flex;
+  align-items: center;
+}
+.account-settings .account-status .left h3{
+  font-size: 1em;
+  font-weight: 600;
+}
+.account-settings .account-status .left p{
+  color: var(--gray);
+  font-size: .868em;
+}
+.account-settings .account-status .left p span.not-verified{
+  background-color: var(--red);
+  color: var(--white);
+  padding: 3px 8px;
+  border-radius: 12px;
+  font-size: .868em;
+}
+.account-settings .account-status .left p span.verified{
+  background-color: var(--green);
+  color: var(--white);
+  padding: 3px 8px;
+  border-radius: 12px;
+  font-size: .868em;
+}
+.account-settings .account-status .right{
+  margin-left: auto;
+  margin-right: 0;
+}
+.account-settings .account-status .right button{
+  padding: 8px 12px;
+  border: none;
+  background-color: var(--red);
+  border-radius: 8px;
+  color: var(--white);
+  cursor: pointer;
+}
+.account-settings button.submit{
+  padding: 8px 18px;
+  margin-top: 20px;
+  border-radius: 8px;
+  cursor: pointer;
+  border: none;
+  background-color: var(--black);
+  color: var(--white);
+}
