@@ -3,6 +3,7 @@ export const BASE_URL = process.env.REACT_APP_BASE_URL;
 
 export const endpoints = {
   // Auth
+  googleAuth: `${BASE_URL}/api/auth/google`,
   register: `${BASE_URL}/api/auth/register`,
   login: `${BASE_URL}/api/auth/login`,
   forgotPassword: `${BASE_URL}/api/auth/forgot-password`,
@@ -13,6 +14,8 @@ export const endpoints = {
   updateStudent: `${BASE_URL}/api/student/user`,
   getStudent: `${BASE_URL}/api/student/user`,
   verifyStudent: `${BASE_URL}/api/student/verification`,
+  getEnrollment: `${BASE_URL}/api/student/enrollment`,
+  getCurriculum: `${BASE_URL}/api/student/curriculum`,
 
   // Admin
   getAccounts: `${BASE_URL}/api/admin/accounts`,
@@ -24,4 +27,7 @@ export const endpoints = {
   getAssign: `${BASE_URL}/api/admin/assign`,
   updateAssign: `${BASE_URL}/api/admin/assign`,
   insertAssign: `${BASE_URL}/api/admin/assign`,
+  totals: `${BASE_URL}/api/admin/totals`,
+  dashboard: `${BASE_URL}/api/admin/dashboard`,
+  updateAccountRole: `${BASE_URL}/api/admin/role`,
 };

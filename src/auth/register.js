@@ -16,12 +16,14 @@ import { register } from '../integration/auth';
 
 const Register = () => {
   const navigate = useNavigate();
+  const [showPassword, setShowPassword] = useState(false); 
   const [formData, setFormData] = useState({
     first_name: "",
-    last_name: "",
+    middle_name: "",
+    last_name: "", 
     email: "",
     password: "",
-    confirm_password: ""
+    confirm_password: "",
   });
 
   const handleChange = (e) => {
@@ -31,21 +33,25 @@ const Register = () => {
     });
   };
 
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     
     // Send form data as JSON
-    const { last_name, first_name, email, password, confirm_password } = formData;
+    const { last_name, middle_name, first_name, email, password, confirm_password } = formData;
 
     // This object should match the expected structure in your PHP backend
     const result = await register({
       last_name,
+      middle_name,
       first_name,
       email,
       password,
       confirm_password,
     });
-
 
     // Handle response
     if (result.status === 'success') {
@@ -60,13 +66,16 @@ const Register = () => {
     document.title = 'Register - Course Monitoring and Curriculum Tracking System';
   });
 
-  return(
+  return (
     <>
       <div className="auth">
         <form onSubmit={handleSubmit}>
           <div className="logo">
             <img src={Logo} alt='logo' />
-            <h1>Course Monitoring and Curriculum Tracking System</h1>
+            <div>
+              <h1>Course Monitoring and Curriculum Tracking System</h1>
+              <p className='program-name'>College of Computer Studies</p>
+            </div>
           </div>
           <div className="header">
             <h1>Welcome!</h1>
@@ -81,6 +90,17 @@ const Register = () => {
                 name='first_name'
                 id='first_name'
                 value={formData.first_name}
+                onChange={handleChange}
+              />
+            </label>
+            <label>
+              <span>Middle name</span>
+              <input
+                type='text'
+                autoComplete='off'
+                name='middle_name'
+                id='middle_name'
+                value={formData.middle_name}
                 onChange={handleChange}
               />
             </label>
@@ -108,25 +128,35 @@ const Register = () => {
             </label>
             <label>
               <span>Password</span>
-              <input
-                type='password'
-                autoComplete='off'
-                name='password'
-                id='password'
-                value={formData.password}
-                onChange={handleChange}
-              />
+              <div className='flex'>
+                <input
+                  type={showPassword ? 'text' : 'password'} 
+                  autoComplete='off'
+                  name='password'
+                  id='password'
+                  value={formData.password}
+                  onChange={handleChange}
+                />
+                <button className='show-password' type="button" onClick={togglePasswordVisibility}>
+                  {showPassword ? 'Hide' : 'Show'}
+                </button>
+              </div>
             </label>
             <label>
               <span>Confirm Password</span>
-              <input
-                type='password'
-                autoComplete='off'
-                name='confirm_password'
-                id='confirm_password'
-                value={formData.confirm_password}
-                onChange={handleChange}
-              />
+              <div className='flex'>
+                <input
+                  type={showPassword ? 'text' : 'password'} 
+                  autoComplete='off'
+                  name='confirm_password'
+                  id='confirm_password'
+                  value={formData.confirm_password}
+                  onChange={handleChange}
+                />
+                <button className='show-password' type="button" onClick={togglePasswordVisibility}>
+                  {showPassword ? 'Hide' : 'Show'}
+                </button>
+              </div>
             </label>
           </div>
           <div className="log-btn">

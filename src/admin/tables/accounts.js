@@ -1,16 +1,19 @@
 import React, { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 
 // Assets
 import AcceptSvg from '../../assets/svg/accept.svg';
 import DeclineSvg from '../../assets/svg/decline.svg';
 import DeactivateSvg from '../../assets/svg/decline.svg';
 import ActivateSvg from '../../assets/svg/accept.svg';
+import ViewSvg from '../../assets/svg/view.svg';
 
 // Components
 import Swal from "sweetalert2";
+import AddUserPopup from "../popup/add-user";
 
 // API
-import { getAccounts, updateAccount } from "../../integration/admin";
+import { getAccounts, updateAccount, updateAccountRole } from "../../integration/admin";
 
 import '../../assets/css/admin/table.css';
 
@@ -21,6 +24,11 @@ const AdminTableAccounts = () => {
   const [loading, setLoading] = useState(false);
   const [hasMore, setHasMore] = useState(true);
   const [error, setError] = useState(null);
+  const [selectedRoles, setSelectedRoles] = useState({});
+  const [showAddAccount, setShowAddAccount] = useState(false);
+
+  const handleOpenAccount = () => setShowAddAccount(true);
+  const handleCloseAccount = () => setShowAddAccount(false);
 
   const fetchData = async (query, currentPage) => {
     setLoading(true);
@@ -81,10 +89,42 @@ const AdminTableAccounts = () => {
     }
   };
 
+  const handleRoleChange = (uid, newRole) => {
+    setSelectedRoles(prevRoles => ({
+      ...prevRoles,
+      [uid]: newRole,
+    }));
+  };
+
+  const handleAcceptWithRole = async (uid) => {
+    const role = selectedRoles[uid];
+    if (!role) {
+      Swal.fire('Error!', 'Please select a role before accepting.', 'error');
+      return;
+    }
+
+    try {
+      const result = await updateAccountRole({ uid, role });
+      if (result.status === 'success') {
+        Swal.fire('Success!', 'Role updated successfully.', 'success');
+        fetchData(searchQuery, page);
+      } else {
+        Swal.fire('Error!', result.message, 'error');
+      }
+    } catch (err) {
+      Swal.fire('Error!', 'An error occurred while updating the role.', 'error');
+    }
+  };
+
   return (
     <>
       <div className="table-holder">
         <div className="table-header">
+          <div className="table-btns">
+            <Link className="add-curriculum-btn" onClick={handleOpenAccount}>
+              + Add New User
+            </Link>
+          </div>
           <div tabIndex="-1" className="search-bar">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true" data-slot="icon">
               <path
@@ -113,6 +153,8 @@ const AdminTableAccounts = () => {
                 <th>Full name</th>
                 <th>Email</th>
                 <th>Role</th>
+                <th>Program</th>
+                <th>Curriculum Year</th>
                 <th>Last login</th>
                 <th>Joined at</th>
                 <th>Action</th>
@@ -124,10 +166,37 @@ const AdminTableAccounts = () => {
                   <td><img src={account.profile} alt="User" /></td>
                   <td>{account.first_name} {account.last_name}</td>
                   <td>{account.email}</td>
-                  <td>{account.role}</td>
+                  <td>
+                    {account.role === 'pending' ? (
+                      <select
+                        value={selectedRoles[account.user_id] || account.role || ""}
+                        onChange={(e) => handleRoleChange(account.user_id, e.target.value)}
+                      >
+                        <option value="">Select Role</option>
+                        <option value="admin">Admin</option>
+                        <option value="student">Student</option>
+                      </select>
+                    ) : (
+                      account.role
+                    )}
+                  </td>
+                  <td></td>
+                  <td></td>
                   <td>{account.last_login}</td>
                   <td>{account.created_at}</td>
                   <td className="action-field">
+                    {account.role === 'pending' ? (
+                      <button
+                        className="accept"
+                        disabled={!selectedRoles[account.user_id]} // Disable until role is selected
+                        onClick={() => handleAcceptWithRole(account.user_id)}
+                      >
+                        <img src={AcceptSvg} alt="Accept" /> Save Role
+                      </button>
+                    ) : (
+                      ''
+                    )}
+
                     {account.status === 'verified' ? (
                       <button className="decline" onClick={() => handleUpdateAccountStatus(account.user_id, account.status)}>
                         <img src={DeactivateSvg} alt="Deactivate" /> Deactivate
@@ -138,14 +207,13 @@ const AdminTableAccounts = () => {
                       </button>
                     ) : (
                       <>
-                        <button className="accept" onClick={() => handleUpdateAccountStatus(account.user_id, account.status)}>
-                          <img src={AcceptSvg} alt="Accept" /> Accept
-                        </button>
-                        <button className="decline" onClick={() => handleUpdateAccountStatus(account.user_id, account.status)}>
-                          <img src={DeclineSvg} alt="Decline" /> Decline
-                        </button>
+                        {account.status}
                       </>
                     )}
+
+                    <button className="view">
+                      <img src={ViewSvg} alt="Edit" /> Edit
+                    </button>
                   </td>
                 </tr>
               ))}
@@ -172,6 +240,11 @@ const AdminTableAccounts = () => {
           </div>
         </div>
       </div>
+
+      <AddUserPopup 
+        show={showAddAccount} 
+        onClose={handleCloseAccount} 
+      />
     </>
   );
 };

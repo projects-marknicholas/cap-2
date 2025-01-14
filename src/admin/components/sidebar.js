@@ -41,6 +41,14 @@ const AdminSidebar = () => {
         </div>
         <div className='link-group'>
           <Link
+            to='/admin/course'
+            className={location.pathname === '/admin/course' ? 'active' : ''}
+          >
+            <img src={SubjectsSvg} alt="Course" />
+          </Link>
+        </div>
+        <div className='link-group'>
+          <Link
             to='/admin/accounts'
             className={location.pathname === '/admin/accounts' ? 'active' : ''}
           >

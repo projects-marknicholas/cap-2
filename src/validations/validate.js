@@ -28,6 +28,8 @@ const ValidateUser = () => {
         location.pathname !== '/admin' &&
         location.pathname !== '/admin/students' &&
         location.pathname !== '/admin/subjects' &&
+        location.pathname !== '/admin/curriculum' &&
+        location.pathname !== '/admin/course' &&
         location.pathname !== '/admin/accounts'
       ) {
         navigate('/'); // Redirect to home if not allowed

@@ -18,7 +18,7 @@ const AssignStudentPop = ({ close, student }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [modifiedSubjects, setModifiedSubjects] = useState([]);
   const [filteredSubjects, setFilteredSubjects] = useState([]);
-  const [selectedSubject, setSelectedSubject] = useState(null); // Track the selected subject
+  const [selectedSubjectsList, setSelectedSubjectsList] = useState([]);
 
   // Fetch subjects for assignment
   const fetchSubjects = async () => {
@@ -89,6 +89,7 @@ const AssignStudentPop = ({ close, student }) => {
 
   // Handle save changes
   const handleSaveChanges = async () => {
+    setIsLoading(true);
     try {
       const updatedSubjectsData = modifiedSubjects.filter(
         (subject, index) => subject.credits !== subjects[index].credits || subject.is_enrolled !== subjects[index].is_enrolled
@@ -137,36 +138,34 @@ const AssignStudentPop = ({ close, student }) => {
         icon: 'error',
         confirmButtonText: 'OK',
       });
+    } finally {
+      setIsLoading(false); 
     }
   };
 
-  // Handle subject selection and insert assignment
-  const handleSubjectSelect = async (subject) => {
-    setSelectedSubject(subject);  // Update the selected subject
+  const handleSubjectSelect = async () => {
+    setIsLoading(true);
 
     try {
-      const { status, message } = await insertAssign({
-        user_id: student.user_id,
-        subject_id: subject.subject_id,
-      });
+      // Map selectedSubjectsList to only extract subject_id
+      const assignments = selectedSubjectsList.map(subject => subject.subject_id);
+
+      const { status, message } = await insertAssign({ user_id: student.user_id, subject_ids: assignments });
 
       if (status === 'success') {
         Swal.fire({
           title: 'Success!',
-          text: message || 'Subject assigned successfully.',
+          text: message || 'Subjects assigned successfully.',
           icon: 'success',
           confirmButtonText: 'OK',
         });
 
-        // Clear the search field
         setSearchQuery('');
-
-        // Re-fetch the subjects to display the updated data in the table
-        fetchSubjects();
+        fetchSubjects(); 
       } else {
         Swal.fire({
           title: 'Error!',
-          text: message || 'An error occurred while assigning this subject.',
+          text: message || 'An error occurred while assigning subjects.',
           icon: 'error',
           confirmButtonText: 'OK',
         });
@@ -174,18 +173,34 @@ const AssignStudentPop = ({ close, student }) => {
     } catch (error) {
       Swal.fire({
         title: 'Error!',
-        text: 'An error occurred while assigning this subject. Please try again.',
+        text: 'An error occurred while assigning subjects. Please try again.',
         icon: 'error',
         confirmButtonText: 'OK',
       });
+    } finally {
+      setIsLoading(false);
+    }
+  };  
+
+  // Handle checkbox selection
+  const handleCheckboxChange = (subject) => {
+    const isAlreadySelected = selectedSubjectsList.some((selected) => selected.subject_id === subject.subject_id);
+
+    if (isAlreadySelected) {
+      // Remove subject if already selected
+      setSelectedSubjectsList(selectedSubjectsList.filter((selected) => selected.subject_id !== subject.subject_id));
+    } else {
+      // Add subject if not already selected
+      setSelectedSubjectsList([...selectedSubjectsList, subject]);
     }
   };
 
   return (
     <div className='admin-pop-overlay'>
-      <button className='admin-pop-close' onClick={close}>Close</button>
+      <button className='admin-pop-close' onClick={close}>×</button>
       <motion.div
         className="admin-subject-pop"
+        style={{ width: 'calc(1100px - 40px)' }}
         initial={{ opacity: 0, y: 50 }}
         animate={{ opacity: 1, y: 0 }}
         exit={{ opacity: 0, y: 50 }}
@@ -198,7 +213,7 @@ const AssignStudentPop = ({ close, student }) => {
             type="search"
             id="search"
             name="search"
-            placeholder="Search for subjects..."
+            placeholder="Search for curriculum..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
           />
@@ -213,20 +228,33 @@ const AssignStudentPop = ({ close, student }) => {
             })}
           </select>
           <select value={semester} onChange={(e) => setSemester(e.target.value)}>
-            <option value="1">1st</option>
-            <option value="2">2nd</option>
+            <option value="1">1st sem</option>
+            <option value="2">2nd sem</option>
+            <option value="summer-1">Summer 1st sem</option>
+            <option value="summer-2">Summer 2nd sem</option>
           </select>
         </div>
 
         {filteredSubjects.length > 0 && (
           <div className="assign-subject-dropdown">
-            <ul>
-              {filteredSubjects.map((subject, index) => (
-                <li key={index} onClick={() => handleSubjectSelect(subject)}>
-                  {subject.subject_code} - {subject.subject}
-                </li>
-              ))}
-            </ul>
+            {isLoading ? (
+              <div className="loading-indicator">Assigning subject to {student.first_name} {student.last_name}...</div>
+            ) : (
+              <div className='assigning'>
+                <ul>
+                  {filteredSubjects.map((subject, index) => (
+                    <li key={index}>
+                      <input
+                        type='checkbox'
+                        onChange={() => handleCheckboxChange(subject)}
+                        checked={selectedSubjectsList.some((selected) => selected.subject_id === subject.subject_id)}
+                      /> {subject.curriculum_name} {subject.subject_code} - {subject.subject}
+                    </li>
+                  ))}
+                </ul>
+                <button onClick={handleSubjectSelect}>Assign</button>
+              </div>
+            )}
           </div>
         )}
 
@@ -242,12 +270,15 @@ const AssignStudentPop = ({ close, student }) => {
                   <th>Description</th>
                   <th>Units (Lec)</th>
                   <th>Units (Lab)</th>
-                  <th>Credits</th>
-                  <th>Actions</th>
+                  <th>Grade</th>
                 </tr>
               </thead>
               <tbody>
-                {subjects.length > 0 ? (
+                {subjects.length === 0 && modifiedSubjects.length === 0 ? (
+                  <tr>
+                    <td colSpan="6">No subjects assigned yet!</td>
+                  </tr>
+                ) : (
                   modifiedSubjects.map((subject, index) => (
                     <tr key={index}>
                       <td>
@@ -276,19 +307,8 @@ const AssignStudentPop = ({ close, student }) => {
                           onChange={(e) => handleCreditChange(subject, e.target.value)}
                         />
                       </td>
-                      <td>
-                        {subject.is_enrolled === 0 && (
-                          <button>
-                            <img src={RemoveSvg} alt="Remove" />
-                          </button>
-                        )}
-                      </td>
                     </tr>
                   ))
-                ) : (
-                  <tr>
-                    <td colSpan="6">No subjects assigned yet!</td>
-                  </tr>
                 )}
               </tbody>
             </table>
@@ -296,7 +316,9 @@ const AssignStudentPop = ({ close, student }) => {
         )}
 
         <div className="pop-footer">
-          <button onClick={handleSaveChanges}>Save Changes</button>
+          <button onClick={handleSaveChanges} disabled={isLoading}>
+            {isLoading ? 'Loading...' : 'Save Changes'}
+          </button>
         </div>
       </motion.div>
     </div>

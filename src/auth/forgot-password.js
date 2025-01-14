@@ -20,7 +20,10 @@ const ForgotPassword = () => {
         <form>
           <div className="logo">
             <img src={Logo} alt='logo' />
-            <h1>Course Monitoring and Curriculum Tracking System</h1>
+            <div>
+              <h1>Course Monitoring and Curriculum Tracking System</h1>
+              <p className='program-name'>College of Computer Studies</p>
+            </div>
           </div>
           <div className="header">
             <h1>Forgot Password</h1>

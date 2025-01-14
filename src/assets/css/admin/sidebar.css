@@ -20,5 +20,5 @@
   border-radius: 8px;
 }
 .admin-section .admin-divider .admin-sidebar .link-group a.active img {
-  filter: brightness(0) saturate(100%) invert(9%) sepia(92%) saturate(3093%) hue-rotate(354deg) brightness(110%) contrast(119%);
+  filter: brightness(0) saturate(100%) invert(7%) sepia(85%) saturate(3125%) hue-rotate(210deg) brightness(117%) contrast(108%);
 }

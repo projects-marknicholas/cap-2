@@ -24,7 +24,7 @@ const AdminTableSubjects = () => {
   const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(false);
   const [hasMore, setHasMore] = useState(true);
-  const [subjectToEdit, setSubjectToEdit] = useState(null); // To store the subject being edited
+  const [subjectToEdit, setSubjectToEdit] = useState(null); 
 
   // Fetch subjects from the API
   const fetchSubjects = async (query, currentPage) => {
@@ -100,7 +100,8 @@ const AdminTableSubjects = () => {
       <div className="table-holder">
         <div className="table-header">
           <div className="table-btns">
-            <Link onClick={handleAddSubjectClick}>+ Add Subject</Link>
+            <Link onClick={handleAddSubjectClick}>+ Add Subject</Link>&nbsp;
+            <Link to='/admin/curriculum'>View Curriculum</Link>
           </div>
           <div tabIndex="-1" className="search-bar">
             <svg
@@ -133,13 +134,15 @@ const AdminTableSubjects = () => {
           <table>
             <thead>
               <tr>
+                <th>Curriculum name</th>
                 <th>Subject code</th>
                 <th>Subject name</th>
                 <th>Lec (Hours)</th>
                 <th>Lab (Hours)</th>
                 <th>Lec (Units)</th>
                 <th>Lab (Units)</th>
-                <th>Year</th>
+                <th>Year Level</th>
+                <th>Academic Year</th>
                 <th>Semester</th>
                 <th>Pre requisites</th>
                 <th>Action</th>
@@ -148,16 +151,28 @@ const AdminTableSubjects = () => {
             <tbody>
               {subjects.map((subject, index) => (
                 <tr key={index}>
+                  <td>{subject.curriculum_name}</td>
                   <td>{subject.subject_code}</td>
                   <td>{subject.subject}</td>
                   <td>{subject.lec_hours}</td>
                   <td>{subject.lab_hours}</td>
                   <td>{subject.lec_unit}</td>
                   <td>{subject.lab_unit}</td>
-                  <td>{subject.year}</td>
+                  <td>
+                    {{
+                      '1': '1st Year',
+                      '2': '2nd Year',
+                      '3': '3rd Year',
+                      '4': '4th Year'
+                    }[subject.year_level] || 'Unknown Year Level'}
+                  </td>
+                  <td>{subject.year ? `${subject.year} - ${parseInt(subject.year) + 1}` : 'N/A'}</td>
                   <td>
                     {subject.semester === '1' ? '1st Semester' : 
-                    subject.semester === '2' ? '2nd Semester' : ''}
+                    subject.semester === '2' ? '2nd Semester' : 
+                    subject.semester === 'summer-1' ? '1st Semester Summer' : 
+                    subject.semester === 'summer-2' ? '2nd Semester Summer' : 
+                    subject.semester === 'summer' ? 'Summer' : ''}
                   </td>
                   <td>{subject.pre_requisites.map(pre => pre.subject_code).join(", ")}</td>
                   <td className="action-field">

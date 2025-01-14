@@ -72,6 +72,41 @@ export const updateAccount = async ({ uid, status }) => {
   }
 };
 
+export const updateAccountRole = async ({ uid, role }) => {
+  const url = `${endpoints.updateAccountRole}?uid=${uid}&role=${role}`;
+  const userData = JSON.parse(localStorage.getItem('user'));
+  const apiKey = userData?.api_key;
+
+  try {
+    if (!url) {
+      throw new Error('API endpoint is not defined');
+    }
+
+    const response = await fetch(url, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': apiKey,
+      }
+    });
+
+    if (!response.ok) {
+      throw new Error('Network response was not ok');
+    }
+
+    const data = await response.json();
+
+    if (data.status === 'error') {
+      throw new Error(data.message);
+    }
+
+    return { status: 'success', message: 'Account role updated successfully.' };
+  } catch (error) {
+    console.error('Error during updating account:', error);
+    return { status: 'error', message: 'An error occurred while updating the account role. Please try again.' };
+  }
+};
+
 export const addSubject = async ({ formData }) => {
   const url = `${endpoints.insertSubject}`;
   const userData = JSON.parse(localStorage.getItem('user'));
@@ -92,7 +127,8 @@ export const addSubject = async ({ formData }) => {
     });
 
     if (!response.ok) {
-      throw new Error('Network response was not ok');
+      const errorData = await response.json(); // Parse error response from API
+      throw new Error(errorData.message || 'Network response was not ok');
     }
 
     const data = await response.json();
@@ -103,8 +139,7 @@ export const addSubject = async ({ formData }) => {
 
     return { status: 'success', message: data.message };
   } catch (error) {
-    console.error('Error during inserting data:', error);
-    return { status: 'error', message: 'An error occurred while inserting data. Please try again.' };
+    return { status: 'error', message: error.message || 'An error occurred while inserting data. Please try again.' };
   }
 };
 
@@ -319,8 +354,48 @@ export const updateAssign = async ({ user_id, subject_id, is_enrolled, credits }
   }
 };
 
-export const insertAssign = async ({ user_id, subject_id }) => {
-  const url = `${endpoints.insertAssign}?user_id=${user_id}&subject_id=${subject_id}`;
+export const insertAssign = async ({ user_id, subject_ids }) => {
+  const userData = JSON.parse(localStorage.getItem('user'));
+  const url = `${endpoints.insertAssign}?user_id=${user_id}`;
+  const apiKey = userData?.api_key;
+
+  try {
+    if (!url) {
+      throw new Error('API endpoint is not defined');
+    }
+
+    // Prepare the data to send in the body
+    const data = {
+      subject_ids: subject_ids,  
+    };
+
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${apiKey}`,
+      },
+      body: JSON.stringify(data),
+    });
+
+    if (!response.ok) {
+      throw new Error('Network response was not ok');
+    }
+
+    const responseData = await response.json();
+
+    if (responseData.status === 'error') {
+      throw new Error(responseData.message);
+    }
+
+    return { status: 'success', message: responseData.message };
+  } catch (error) {
+    return { status: 'error', message: error.message || 'An error occurred while inserting data. Please try again.' };
+  }
+};
+
+export const totals = async () => {
+  const url = `${endpoints.totals}`
   const userData = JSON.parse(localStorage.getItem('user'));
   const apiKey = userData?.api_key;
 
@@ -330,11 +405,10 @@ export const insertAssign = async ({ user_id, subject_id }) => {
     }
 
     const response = await fetch(url, {
-      method: 'POST', 
       headers: {
         'Content-Type': 'application/json',
         'Authorization': apiKey,
-      }
+      },
     });
 
     if (!response.ok) {
@@ -347,8 +421,43 @@ export const insertAssign = async ({ user_id, subject_id }) => {
       throw new Error(data.message);
     }
 
-    return { status: 'success', message: data.message };
+    return { status: 'success', data: data.data };
   } catch (error) {
-    return { status: 'error', message: 'An error occurred while inserting data. Please try again.' };
+    console.error('Error during fetching data:', error);
+    return { status: 'error', message: 'An error occurred while fetching data. Please try again.' };
+  }
+};
+
+export const dashboard = async () => {
+  const url = `${endpoints.dashboard}`
+  const userData = JSON.parse(localStorage.getItem('user'));
+  const apiKey = userData?.api_key;
+
+  try {
+    if (!url) {
+      throw new Error('API endpoint is not defined');
+    }
+
+    const response = await fetch(url, {
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': apiKey,
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error('Network response was not ok');
+    }
+
+    const data = await response.json();
+
+    if (data.status === 'error') {
+      throw new Error(data.message);
+    }
+
+    return { status: 'success', data: data.data };
+  } catch (error) {
+    console.error('Error during fetching data:', error);
+    return { status: 'error', message: 'An error occurred while fetching data. Please try again.' };
   }
 };

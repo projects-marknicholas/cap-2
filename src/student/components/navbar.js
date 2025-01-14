@@ -12,7 +12,7 @@ const Navbar = () => {
       <nav>
         <div className="left">
           <img src={Logo} alt="logo"/>
-          <h1>Course Monitoring and Curriculum Tracking System</h1>
+          <h1>College of Computer Studies</h1>
         </div>
         <div className="right">
           <div className="nav-group">

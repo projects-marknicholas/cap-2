@@ -16,14 +16,16 @@ const AddSubjectPopup = ({
   refreshTable
 }) => {
   const [formData, setFormData] = useState({
+    curriculum_name: '',
     subject_code: '',
     subject: '',
     lec_unit: '',
     lab_unit: '',
     lec_hours: '',
     lab_hours: '',
+    year_level: '1',
     year: '',
-    semester: '',
+    semester: '1',
   });
   const [loading, setLoading] = useState(false);
   const [subjects, setSubjects] = useState([]);
@@ -57,27 +59,43 @@ const AddSubjectPopup = ({
     }
   }, [show]);
 
+  useEffect(() => {
+    const lecUnit = parseFloat(formData.lec_unit || 0); // Lecture units
+    const labUnit = parseFloat(formData.lab_unit || 0); // Laboratory units
+  
+    setFormData((prevData) => {
+      const lecHours = lecUnit; // Lecture hours = Lecture units
+      const labHours = labUnit * 3; // 1 lab unit = 3 lab hours
+  
+      return {
+        ...prevData,
+        lec_hours: lecUnit > 0 ? lecHours.toFixed(1) : '0.0', // Update lecture hours
+        lab_hours: labUnit > 0 ? labHours.toFixed(1) : '0.0', // Update laboratory hours
+      };
+    });
+  }, [formData.lec_unit, formData.lab_unit]);   
+
   const handleChange = (event) => {
     const { name, value } = event.target;
     setFormData((prevData) => ({
       ...prevData,
       [name]: value,
-    }));
+    }));         
   };
 
   const handleSubmit = async () => {
     setLoading(true);
-
+  
     const payload = {
       ...formData,
       pre_requisites: preRequisites,
     };
-
+  
     try {
       const result = await addSubject({ formData: payload });
-
+  
       setLoading(false);
-
+  
       if (result.status === 'success') {
         Swal.fire({
           title: 'Success!',
@@ -85,7 +103,7 @@ const AddSubjectPopup = ({
           icon: 'success',
           confirmButtonText: 'OK',
         }).then(() => {
-          onClose(); 
+          onClose();
           refreshTable();
         });
       } else {
@@ -98,7 +116,7 @@ const AddSubjectPopup = ({
       }
     } catch (error) {
       setLoading(false);
-
+  
       Swal.fire({
         title: 'Unexpected Error',
         text: 'Something went wrong. Please try again later.',
@@ -106,13 +124,13 @@ const AddSubjectPopup = ({
         confirmButtonText: 'OK',
       });
     }
-  };
+  };  
 
   return (
     <div className={`admin-pop-overlay ${show ? 'show' : 'hide'}`}>
       {show && (
         <>
-          <button className='admin-pop-close' onClick={onClose}>Close</button>
+          <button className='admin-pop-close' onClick={onClose}>×</button>
           <motion.div 
             className="admin-subject-pop" 
             initial={{ opacity: 0, y: 50 }}
@@ -124,6 +142,16 @@ const AddSubjectPopup = ({
 
             <div className='form-group'>
               <div className='form-group-grid2'>
+                <label htmlFor='curriculum_name'>
+                  <p>Curriculum Name</p>
+                  <input 
+                    type='text' 
+                    id='curriculum_name' 
+                    name='curriculum_name' 
+                    value={formData.curriculum_name}
+                    onChange={handleChange}
+                  />
+                </label>
                 <label htmlFor='subject_code'>
                   <p>Subject code</p>
                   <input 
@@ -144,55 +172,39 @@ const AddSubjectPopup = ({
                     onChange={handleChange}
                   />
                 </label>
-                <label htmlFor='lec_hours'>
-                  <p>Lec (Hours)</p>
-                  <input 
-                    type='text' 
-                    id='lec_hours' 
-                    name='lec_hours' 
-                    value={formData.lec_hours}
+                <label htmlFor='subject'>
+                  <p>Year Level</p>
+                  <select 
+                    id="year_level" 
+                    name="year_level" 
+                    value={formData.year_level} 
                     onChange={handleChange}
-                  />
+                  >
+                    <option value="1">1st year</option>
+                    <option value="2">2nd year</option>
+                    <option value="3">3rd year</option>
+                    <option value="4">4th year</option>
+                  </select>
                 </label>
-                <label htmlFor='lab_hours'>
-                  <p>Lab (Hours)</p>
-                  <input 
-                    type='text' 
-                    id='lab_hours' 
-                    name='lab_hours' 
-                    value={formData.lab_hours}
+                
+                <label htmlFor="year">
+                  <p>Academic Year</p>
+                  <select 
+                    id="year" 
+                    name="year" 
+                    value={formData.year} 
                     onChange={handleChange}
-                  />
-                </label>
-                <label htmlFor='lec_unit'>
-                  <p>Lec (Units)</p>
-                  <input 
-                    type='text' 
-                    id='lec_unit' 
-                    name='lec_unit' 
-                    value={formData.lec_unit}
-                    onChange={handleChange}
-                  />
-                </label>
-                <label htmlFor='lab_unit'>
-                  <p>Lab (Units)</p>
-                  <input 
-                    type='text' 
-                    id='lab_unit' 
-                    name='lab_unit' 
-                    value={formData.lab_unit}
-                    onChange={handleChange}
-                  />
-                </label>
-                <label htmlFor='year'>
-                  <p>Year</p>
-                  <input 
-                    type='text' 
-                    id='year' 
-                    name='year' 
-                    value={formData.year}
-                    onChange={handleChange}
-                  />
+                  >
+                    <option value="" disabled>Select a year</option>
+                    {Array.from({ length: 100 }, (_, index) => {
+                      const year = new Date().getFullYear() - index; 
+                      return (
+                        <option key={year} value={year}>
+                          {year}
+                        </option>
+                      );
+                    })}
+                  </select>
                 </label>
                 <label htmlFor='semester'>
                   <p>Semester</p>
@@ -204,7 +216,51 @@ const AddSubjectPopup = ({
                   >
                     <option value='1'>1st semester</option>
                     <option value='2'>2nd semester</option>
+                    <option value='summer-1'>Summer 1st semester</option>
+                    <option value='summer-2'>Summer 2nd semester</option>
                   </select>
+                </label>
+                <label htmlFor='lec_units'>
+                  <p>Lec (Units)</p>
+                  <input
+                    type='text'
+                    id='lec_unit'
+                    name='lec_unit'
+                    value={formData.lec_unit}
+                    onChange={handleChange}
+                  />
+                </label>
+                <label htmlFor='lec_hours'>
+                  <p>Lec (Hours)</p>
+                  <input
+                    type='text'
+                    id='lec_hours'
+                    name='lec_hours'
+                    readOnly
+                    value={formData.lec_hours}
+                    onChange={handleChange}
+                  />
+                </label>
+                <label htmlFor='lab_units'>
+                  <p>Lab (Units)</p>
+                  <input
+                    type='text'
+                    id='lab_unit'
+                    name='lab_unit'
+                    value={formData.lab_unit}
+                    onChange={handleChange}
+                  />
+                </label>
+                <label htmlFor='lab_hours'>
+                  <p>Lab (Hours)</p>
+                  <input
+                    type='text'
+                    id='lab_hours'
+                    name='lab_hours'
+                    readOnly
+                    value={formData.lab_hours}
+                    onChange={handleChange}
+                  />
                 </label>
               </div>
               <div className='form-group-grid'>

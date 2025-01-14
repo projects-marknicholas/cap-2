@@ -7,6 +7,20 @@
   box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
   margin-bottom: 30px;
 }
+.student-evaluation .evalit,
+.student-evaluation .evalit .unit-summary{
+  display: flex;
+  align-items: center;
+}
+.student-evaluation .evalit .unit-summary{
+  margin-left: auto;
+  margin-right: 0;
+  font-size: .868em;
+  font-weight: 500;
+}
+.student-evaluation .evalit .unit-summary p{
+  margin-left: 12px;
+}
 .student-evaluation h1{
   font-size: 1.5em;
 }

@@ -6,6 +6,11 @@
   width: 1440px;
   margin: auto;
 }
+.program-name{
+  font-size: .868em;
+  font-style: italic;
+  color: var(--grey);
+}
 
 @media(max-width: 768px){
   .container{

@@ -23,6 +23,8 @@ import AdminHome from './admin/home';
 import AdminStudents from './admin/students';
 import AdminSubjects from './admin/subjects';
 import AdminAccounts from './admin/accounts';
+import AdminCurriculum from './admin/curriculum';
+import AdminCourse from './admin/course';
 
 function App() {
   return (
@@ -47,6 +49,8 @@ function App() {
           <Route path='/admin/students' element={ <AdminStudents/> }/>
           <Route path='/admin/subjects' element={ <AdminSubjects/> }/>
           <Route path='/admin/accounts' element={ <AdminAccounts/> }/>
+          <Route path='/admin/curriculum' element={ <AdminCurriculum/> }/>
+          <Route path='/admin/course' element={ <AdminCourse/> }/>
         </Routes>
       </Router>
     </>

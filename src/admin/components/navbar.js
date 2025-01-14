@@ -23,7 +23,7 @@ const AdminNavbar = () => {
         <div className="left">
           <img src={Logo}/>
           <div className="admin-nav-info">
-            <p>UPHSD</p>
+            <p>College of Computer Studies</p>
             <span>Course Monitoring and Curriculum Tracking System</span>
           </div>
         </div>
