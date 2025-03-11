@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 
 // Assets
+import Swal from 'sweetalert2';
 import DeclineSvg from '../../assets/svg/decline.svg';
 import ViewSvg from '../../assets/svg/view.svg';
 
@@ -9,15 +10,108 @@ import ViewSvg from '../../assets/svg/view.svg';
 import AddCurriculumPopup from '../popup/add-curriculum';
 import EditCurriculumPopup from '../popup/edit-curriculum';
 
+// API
+import { getCurriculum, deleteCurriculum } from '../../integration/admin';
+
 const AdminTableCurriculum = () => {
   const [showAddSubject, setShowAddSubject] = useState(false);
   const [showEditCurriculum, setShowEditCurriculum] = useState(false);
+  const [curriculum, setCurriculum] = useState([]);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [page, setPage] = useState(1);
+  const [hasMore, setHasMore] = useState(true);
+  const [editCurriculumData, setEditCurriculumData] = useState(null);
 
   const handleOpenSubject = () => setShowAddSubject(true);
   const handleCloseSubject = () => setShowAddSubject(false);
 
-  const handleOpenEditCurriculum = () => setShowEditCurriculum(true);
-  const handleCloseEditCurriculum = () => setShowEditCurriculum(false);
+  const handleOpenEditCurriculum = (curriculum) => {
+    setEditCurriculumData(curriculum); 
+    setShowEditCurriculum(true);
+  };
+
+  const handleCloseEditCurriculum = () => {
+    setEditCurriculumData(null); 
+    setShowEditCurriculum(false);
+  };
+
+  const handleDeleteCurriculum = async (curriculum_id) => {
+    Swal.fire({
+      title: "Are you sure?",
+      text: "You won't be able to undo this action!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#d33",
+      cancelButtonColor: "#3085d6",
+      confirmButtonText: "Yes, delete it!",
+      cancelButtonText: "Cancel"
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        const response = await deleteCurriculum({ curriculum_id });
+  
+        if (response.status === "success") {
+          Swal.fire({
+            title: "Deleted!",
+            text: response.message,
+            icon: "success",
+            confirmButtonText: "OK"
+          });
+          refreshTable();
+        } else {
+          Swal.fire({
+            title: "Error!",
+            text: response.message,
+            icon: "error",
+            confirmButtonText: "Try Again"
+          });
+        }
+      }
+    });
+  };  
+
+  // Fetch curriculum from the API
+  const fetchCurriculum = async (query, currentPage) => {
+    setLoading(true);
+    try {
+      const result = await getCurriculum({ searchQuery: query, page: currentPage });
+      if (result.status === 'success') {
+        setCurriculum(prevCurriculum =>
+          currentPage === 1 ? result.data : [...prevCurriculum, ...result.data]
+        );
+        setHasMore(result.data.length >= 50); 
+      } else {
+        console.error(result.message);
+      }
+    } catch (error) {
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const refreshTable = () => {
+    setPage(1);
+    setHasMore(true);
+    fetchCurriculum(searchQuery, 1);
+  };
+
+  useEffect(() => {
+    fetchCurriculum(searchQuery, page);
+  }, [page, searchQuery]);
+
+  // Handle search input change
+  const handleSearchChange = (e) => {
+    setSearchQuery(e.target.value);
+    setPage(1);
+    setHasMore(true); 
+  };
+
+  // Handle pagination
+  const loadMore = () => {
+    if (hasMore && !loading) {
+      setPage((prevPage) => prevPage + 1);
+    }
+  };
 
   return (
     <>
@@ -49,6 +143,8 @@ const AdminTableCurriculum = () => {
               autoComplete="off"
               placeholder="Search"
               aria-label="Search Curriculum"
+              value={searchQuery}
+              onChange={handleSearchChange}
             />
           </div>
         </div>
@@ -64,34 +160,47 @@ const AdminTableCurriculum = () => {
               </tr>
             </thead>
             <tbody>
-              <tr>
-                <td>BSIT</td>
-                <td>Information Technology Program</td>
-                <td>2024-2025</td>
-                <td className="action-field">
-                  <button className="view" onClick={handleOpenEditCurriculum}>
-                    <img src={ViewSvg} alt="Edit" /> Edit
-                  </button>
-                  <button className="decline">
-                    <img src={DeclineSvg} alt="Delete" /> Delete
-                  </button>
-                </td>
-              </tr>
+              {curriculum.length > 0 ? (
+                curriculum.map((item, index) => (
+                  <tr key={index}>
+                    <td>{item.program}</td>
+                    <td>{item.description}</td>
+                    <td>{item.curriculum_year}</td>
+                    <td className="action-field">
+                      <button className="view" onClick={() => handleOpenEditCurriculum(item)}>
+                        <img src={ViewSvg} alt="Edit" /> Edit
+                      </button>
+                      <button className="decline" onClick={() => handleDeleteCurriculum(item.curriculum_id)}>
+                        <img src={DeclineSvg} alt="Delete" /> Delete
+                      </button>
+                    </td>
+                  </tr>
+                ))
+              ) : (
+                <tr>
+                  <td colSpan="4" className="no-data">
+                    No curriculum found
+                  </td>
+                </tr>
+              )}
             </tbody>
           </table>
         </div>
         
         <div className="table-footer">
           <div className="item">
-            <p>Showing 0 result(s)</p>
+            <p>Showing {curriculum.length} result(s)</p>
           </div>
           <div className="item center">
-            <button className="load-more">
-              Load More
-            </button>
+            {hasMore && !loading && (
+              <button className="load-more" onClick={loadMore}>
+                Load More
+              </button>
+            )}
+            {loading && <p>Loading...</p>}
           </div>
           <div className="item right">
-            <p>Total of 0 result(s)</p>
+            <p>Total of {curriculum.length} result(s)</p>
           </div>
         </div>
       </div>
@@ -100,12 +209,15 @@ const AdminTableCurriculum = () => {
       <AddCurriculumPopup 
         show={showAddSubject} 
         onClose={handleCloseSubject} 
+        refreshTable={refreshTable}
       />
 
       {/* Edit Curriculum Popup */}
       <EditCurriculumPopup 
         show={showEditCurriculum} 
         onClose={handleCloseEditCurriculum} 
+        refreshTable={refreshTable}
+        curriculumData={editCurriculumData}
       />
     </>
   );

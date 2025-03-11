@@ -25,6 +25,7 @@ import AdminSubjects from './admin/subjects';
 import AdminAccounts from './admin/accounts';
 import AdminCurriculum from './admin/curriculum';
 import AdminCourse from './admin/course';
+import AdminEnroll from './admin/enroll';
 
 function App() {
   return (
@@ -50,6 +51,7 @@ function App() {
           <Route path='/admin/subjects' element={ <AdminSubjects/> }/>
           <Route path='/admin/accounts' element={ <AdminAccounts/> }/>
           <Route path='/admin/curriculum' element={ <AdminCurriculum/> }/>
+          <Route path='/admin/enroll' element={ <AdminEnroll/> }/>
           <Route path='/admin/course' element={ <AdminCourse/> }/>
         </Routes>
       </Router>

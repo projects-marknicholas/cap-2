@@ -11,6 +11,7 @@ import ViewSvg from '../../assets/svg/view.svg';
 // Components
 import Swal from "sweetalert2";
 import AddUserPopup from "../popup/add-user";
+import EditUserPopup from "../popup/edit-user";
 
 // API
 import { getAccounts, updateAccount, updateAccountRole } from "../../integration/admin";
@@ -26,9 +27,29 @@ const AdminTableAccounts = () => {
   const [error, setError] = useState(null);
   const [selectedRoles, setSelectedRoles] = useState({});
   const [showAddAccount, setShowAddAccount] = useState(false);
+  const [showEditAccount, setShowEditAccount] = useState(false);
+  const [editAccountData, setEditAccountData] = useState(null);
 
   const handleOpenAccount = () => setShowAddAccount(true);
   const handleCloseAccount = () => setShowAddAccount(false);
+
+  const handleOpenEditAccount = (account) => {
+    setEditAccountData(account);
+    setShowEditAccount(true);
+  };
+
+  const handleCloseEditAccount = () => {
+    setShowEditAccount(false);
+    setEditAccountData(null);
+  };
+
+  const handleUserAdded = () => {
+    fetchData(searchQuery, 1); 
+  };
+
+  const handleUserEdit = () => {
+    fetchData(searchQuery, page);
+  };
 
   const fetchData = async (query, currentPage) => {
     setLoading(true);
@@ -150,6 +171,7 @@ const AdminTableAccounts = () => {
             <thead>
               <tr>
                 <th>Image</th>
+                <th>Student ID</th>
                 <th>Full name</th>
                 <th>Email</th>
                 <th>Role</th>
@@ -164,7 +186,8 @@ const AdminTableAccounts = () => {
               {data.map((account, index) => (
                 <tr key={index}>
                   <td><img src={account.profile} alt="User" /></td>
-                  <td>{account.first_name} {account.last_name}</td>
+                  <td>{account.student_number}</td>
+                  <td>{account.first_name} {account.middle_name} {account.last_name}</td>
                   <td>{account.email}</td>
                   <td>
                     {account.role === 'pending' ? (
@@ -180,8 +203,8 @@ const AdminTableAccounts = () => {
                       account.role
                     )}
                   </td>
-                  <td></td>
-                  <td></td>
+                  <td>{account.program}</td>
+                  <td>{account.curriculum_year}</td>
                   <td>{account.last_login}</td>
                   <td>{account.created_at}</td>
                   <td className="action-field">
@@ -205,13 +228,17 @@ const AdminTableAccounts = () => {
                       <button className="accept" onClick={() => handleUpdateAccountStatus(account.user_id, account.status)}>
                         <img src={ActivateSvg} alt="Activate" /> Activate
                       </button>
+                    ) : account.role === 'admin' ? (
+                      <button className="decline" onClick={() => handleUpdateAccountStatus(account.user_id, 'deactivated')}>
+                        <img src={DeactivateSvg} alt="Deactivate" /> Deactivate
+                      </button>
                     ) : (
                       <>
                         {account.status}
                       </>
                     )}
 
-                    <button className="view">
+                    <button className="view" onClick={() => handleOpenEditAccount(account)}>
                       <img src={ViewSvg} alt="Edit" /> Edit
                     </button>
                   </td>
@@ -243,7 +270,15 @@ const AdminTableAccounts = () => {
 
       <AddUserPopup 
         show={showAddAccount} 
-        onClose={handleCloseAccount} 
+        onClose={handleCloseAccount}  
+        onUserAdded={handleUserAdded} 
+      />
+
+      <EditUserPopup
+        show={showEditAccount} 
+        onClose={handleCloseEditAccount}  
+        data={editAccountData}
+        onUserEdit={handleUserEdit} 
       />
     </>
   );

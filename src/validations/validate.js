@@ -29,6 +29,7 @@ const ValidateUser = () => {
         location.pathname !== '/admin/students' &&
         location.pathname !== '/admin/subjects' &&
         location.pathname !== '/admin/curriculum' &&
+        location.pathname !== '/admin/enroll' &&
         location.pathname !== '/admin/course' &&
         location.pathname !== '/admin/accounts'
       ) {

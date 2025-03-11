@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import Swal from 'sweetalert2';
 import { motion } from 'framer-motion';
+import { updateCourse } from '../../integration/admin';
 
-import { addCourse, getRequisites } from '../../integration/admin';
-
-const AddCoursePopup = ({ show, onClose, refreshTable, program, curriculumYear }) => {
+const EditCoursePopup = ({ show, onClose, refreshTable, courseData }) => {
   const [formData, setFormData] = useState({
-    program: program || '',
-    curriculum_year: curriculumYear || '',
+    course_id: '',
+    program: '',
+    curriculum_year: '',
     year_level: '',
     semester: '',
     course_code: '',
@@ -15,62 +15,64 @@ const AddCoursePopup = ({ show, onClose, refreshTable, program, curriculumYear }
     course_type: '',
     units: '',
     hours: '',
-    coRequisites: [''],
-    preRequisites: [''],
+    coRequisites: [],
+    preRequisites: [],
   });
-  const [customYear, setCustomYear] = useState("");
+
+  const [customYear, setCustomYear] = useState('');
   const [showCustomYear, setShowCustomYear] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [courses, setCourses] = useState([]); 
-  const [fetchError, setFetchError] = useState(null); 
 
-  // Fetch courses when the component mounts or when program/curriculumYear changes
-  const fetchCourses = async () => {
-    try {
-      const result = await getRequisites({ program, curriculum_year: curriculumYear });
-      if (result.status === 'success') {
-        setCourses(result.data); 
-      } else {
-        setFetchError(result.message || 'Failed to fetch courses.');
+  useEffect(() => {
+    if (courseData) {
+      setFormData({
+        course_id: courseData.course_id || '',
+        program: courseData.program || '',
+        curriculum_year: courseData.curriculum_year || '',
+        year_level: courseData.year_level || '',
+        semester: courseData.semester || '',
+        course_code: courseData.course_code || '',
+        course_description: courseData.course_description || '',
+        course_type: courseData.course_type || '',
+        units: courseData.units || '',
+        hours: courseData.hours || '',
+        coRequisites: courseData.coRequisites || [],
+        preRequisites: courseData.preRequisites || [],
+      });
+
+      // Check if the curriculum_year is a custom year (not in the dropdown options)
+      const isCustomYear = !Array.from({ length: 20 }, (_, index) => {
+        const year = new Date().getFullYear() - index;
+        return `${year}-${year + 1}`;
+      }).includes(courseData.curriculum_year);
+
+      if (isCustomYear) {
+        setCustomYear(courseData.curriculum_year);
+        setShowCustomYear(true);
       }
-    } catch (error) {
-      setFetchError(error.message || 'An error occurred while fetching courses.');
     }
-  };
-  
-  useEffect(() => {
-    if (program && curriculumYear) {
-      fetchCourses();
-    }
-  }, [program, curriculumYear]);  
-
-  useEffect(() => {
-    setFormData(prevData => ({
-      ...prevData,
-      program: program || '',
-      curriculum_year: curriculumYear || '',
-    }));
-  }, [program, curriculumYear]);
+  }, [courseData]);
 
   const handleChange = (event) => {
     const { name, value } = event.target;
-    setFormData((prevData) => ({
-      ...prevData,
-      [name]: value,
-    }));
-  };
-
-  useEffect(() => {
-    if (formData.course_type === "lec") {
-      setFormData((prev) => ({ ...prev, hours: String(formData.units) }));
-    } else if (formData.course_type === "lab") {
-      setFormData((prev) => ({ ...prev, hours: String(formData.units * 3) }));
+    if (name === 'curriculum_year') {
+      setShowCustomYear(false);
+      setFormData((prevData) => ({
+        ...prevData,
+        curriculum_year: value,
+      }));
+    } else {
+      setFormData((prevData) => ({
+        ...prevData,
+        [name]: value,
+      }));
     }
-  }, [formData.course_type, formData.units]);
+  };
 
   const handleSubmit = async () => {
     setLoading(true);
 
+    // If custom year is being used, set the curriculum_year to the custom year value
     if (showCustomYear) {
       if (!customYear.trim()) {
         Swal.fire('Error', 'Please enter a custom curriculum year.', 'error');
@@ -81,7 +83,7 @@ const AddCoursePopup = ({ show, onClose, refreshTable, program, curriculumYear }
     }
 
     try {
-      const result = await addCourse(formData);
+      const result = await updateCourse({ course_id: formData.course_id, formData });
       setLoading(false);
 
       if (result.status === 'success') {
@@ -91,31 +93,11 @@ const AddCoursePopup = ({ show, onClose, refreshTable, program, curriculumYear }
           icon: 'success',
           confirmButtonText: 'OK',
         }).then(() => {
-          // Reset the form
-          setFormData({
-            program: program || '',
-            curriculum_year: curriculumYear || '',
-            year_level: '',
-            semester: '',
-            course_code: '',
-            course_description: '',
-            course_type: '',
-            units: '',
-            hours: '',
-            coRequisites: [''],
-            preRequisites: [''],
-          });
-
-          // Reset custom year input
-          setCustomYear("");
-          setShowCustomYear(false);
-
           onClose();
           refreshTable();
-          fetchCourses();
         });
       } else {
-        Swal.fire('Error', result.message || 'Failed to add course.', 'error');
+        Swal.fire('Error', result.message || 'Failed to update course.', 'error');
       }
     } catch (error) {
       setLoading(false);
@@ -123,40 +105,36 @@ const AddCoursePopup = ({ show, onClose, refreshTable, program, curriculumYear }
     }
   };
 
-  // Add both a pre-requisite and co-requisite input field
-  const addRequisite = () => {
+  const addCoRequisite = () => {
     setFormData((prevData) => ({
       ...prevData,
       coRequisites: [...prevData.coRequisites, ''],
+    }));
+  };
+
+  const addPreRequisite = () => {
+    setFormData((prevData) => ({
+      ...prevData,
       preRequisites: [...prevData.preRequisites, ''],
     }));
   };
 
-  const removeRequisite = (index) => {
+  const removeCoRequisite = (index) => {
+    const newCoRequisites = [...formData.coRequisites];
+    newCoRequisites.splice(index, 1);
     setFormData((prevData) => ({
       ...prevData,
-      coRequisites: prevData.coRequisites.filter((_, i) => i !== index),
-      preRequisites: prevData.preRequisites.filter((_, i) => i !== index),
+      coRequisites: newCoRequisites,
     }));
   };
 
-  const handleYearChange = (event) => {
-    const selectedValue = event.target.value;
-
-    if (selectedValue === "Others") {
-      setShowCustomYear(true);
-      setFormData((prevData) => ({
-        ...prevData,
-        curriculum_year: "",
-      }));
-      setCustomYear("");
-    } else {
-      setShowCustomYear(false);
-      setFormData((prevData) => ({
-        ...prevData,
-        curriculum_year: selectedValue,
-      }));
-    }
+  const removePreRequisite = (index) => {
+    const newPreRequisites = [...formData.preRequisites];
+    newPreRequisites.splice(index, 1);
+    setFormData((prevData) => ({
+      ...prevData,
+      preRequisites: newPreRequisites,
+    }));
   };
 
   return (
@@ -173,47 +151,36 @@ const AddCoursePopup = ({ show, onClose, refreshTable, program, curriculumYear }
             exit={{ opacity: 0, y: 50 }}
             transition={{ duration: 0.3 }}
           >
-            <div className="header">Add New Course</div>
+            <div className="header">Edit Course</div>
             <div className="form-group">
               <div className="form-group-grid2">
+                {/* Form Fields */}
                 <label>
                   <p>Program</p>
-                  <input
-                    id="program"
-                    name="program"
-                    value={formData.program}
-                    onChange={handleChange}
-                    disabled
-                    readOnly
-                  />
+                  <select name="program" value={formData.program} onChange={handleChange}>
+                    <option value="Bachelor of Science in Information Technology">
+                      Bachelor of Science in Information Technology
+                    </option>
+                    <option value="Bachelor of Science in Information Technology with BPO">
+                      Bachelor of Science in Information Technology with BPO
+                    </option>
+                    <option value="Bachelor of Science in Information Technology with Specialization in Game Development">
+                      Bachelor of Science in Information Technology with Specialization in Game Development
+                    </option>
+                  </select>
                 </label>
 
                 {/* Curriculum Year */}
-                {!showCustomYear ? (
-                  <label htmlFor="curriculum_year">
-                    <p>Curriculum Year</p>
-                    <input
-                      id="curriculum_year"
-                      name="curriculum_year"
-                      value={formData.curriculum_year}
-                      onChange={handleYearChange}
-                      disabled
-                      readOnly
-                    />
-                  </label>
-                ) : (
-                  <label htmlFor="customYear">
-                    <p>Enter Custom Curriculum Year</p>
-                    <input
-                      type="text"
-                      id="customYear"
-                      name="customYear"
-                      value={customYear}
-                      onChange={(e) => setCustomYear(e.target.value)}
-                      placeholder="e.g. 2025-2026"
-                    />
-                  </label>
-                )}
+                <label>
+                  <p>Enter Curriculum Year</p>
+                  <input
+                    type="text"
+                    name="curriculum_year"
+                    value={formData.curriculum_year}
+                    onChange={handleChange}
+                    placeholder="e.g. 2025-2026"
+                  />
+                </label>
 
                 {/* Year Level */}
                 <label>
@@ -235,7 +202,7 @@ const AddCoursePopup = ({ show, onClose, refreshTable, program, curriculumYear }
                     <option value="" disabled>Select Semester</option>
                     <option value='1'>First Semester</option>
                     <option value='2'>Second Semester</option>
-                    <option value='summer'>Summer</option>
+                    <option value='Summer'>Summer</option>
                   </select>
                 </label>
 
@@ -264,18 +231,11 @@ const AddCoursePopup = ({ show, onClose, refreshTable, program, curriculumYear }
                 {/* Course Type */}
                 <label>
                   <p>Course Type</p>
-                  <select
-                    name="course_type"
-                    value={formData.course_type}
-                    onChange={handleChange}
-                  >
-                    <option value="">Select Course Type</option>
+                  <select name="course_type" value={formData.course_type} onChange={handleChange}>
                     <option value="lec">lec</option>
                     <option value="lab">lab</option>
                   </select>
                 </label>
-
-                <label></label>
 
                 {/* Units */}
                 <label>
@@ -295,7 +255,7 @@ const AddCoursePopup = ({ show, onClose, refreshTable, program, curriculumYear }
                     type="number"
                     name="hours"
                     value={formData.hours}
-                    readOnly
+                    onChange={handleChange}
                   />
                 </label>
 
@@ -313,14 +273,11 @@ const AddCoursePopup = ({ show, onClose, refreshTable, program, curriculumYear }
                           setFormData({ ...formData, coRequisites: newcoRequisites });
                         }}
                       >
-                        <option value="">Select Co-Requisite</option>
-                        {courses.map((course) => (
-                          <option key={course.course_id} value={course.course_code}>
-                            {course.course_code} - {course.course_description}
-                          </option>
-                        ))}
+                        <option value='Subject 1'>Subject 1</option>
+                        <option value='Subject 2'>Subject 2</option>
+                        <option value='Subject 3'>Subject 3</option>
                       </select>
-                      <button type="button" onClick={() => removeRequisite(index)}>
+                      <button type="button" onClick={() => removeCoRequisite(index)}>
                         Remove
                       </button>
                     </div>
@@ -341,24 +298,20 @@ const AddCoursePopup = ({ show, onClose, refreshTable, program, curriculumYear }
                           setFormData({ ...formData, preRequisites: newpreRequisites });
                         }}
                       >
-                        <option value="">Select Pre-Requisite</option>
-                        {courses.map((course) => (
-                          <option key={course.course_id} value={course.course_code}>
-                            {course.course_code} - {course.course_description}
-                          </option>
-                        ))}
+                        <option value='Subject 1'>Subject 1</option>
+                        <option value='Subject 2'>Subject 2</option>
+                        <option value='Subject 3'>Subject 3</option>
                       </select>
-                      <button type="button" onClick={() => removeRequisite(index)}>
+                      <button type="button" onClick={() => removePreRequisite(index)}>
                         Remove
                       </button>
                     </div>
                   </label>
                 ))}
 
-                {/* Add Requisite Button */}
-                <button type="button" onClick={addRequisite}>
-                  Add Requisite
-                </button>
+                <div></div>
+                <button type="button" onClick={addCoRequisite}>Add Co-Requisite</button>
+                <button type="button" onClick={addPreRequisite}>Add Pre-Requisite</button>
 
                 {/* Submit Button */}
                 <button
@@ -378,4 +331,4 @@ const AddCoursePopup = ({ show, onClose, refreshTable, program, curriculumYear }
   );
 };
 
-export default AddCoursePopup;
+export default EditCoursePopup;

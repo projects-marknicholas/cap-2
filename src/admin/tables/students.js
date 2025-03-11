@@ -120,12 +120,12 @@ const AdminTableStudents = () => {
                   <td>{`${student.first_name} ${student.last_name}`}</td>
                   <td>{student.email}</td>
                   <td className="action-field">
-                    <button
+                    {/* <button
                       className="view"
                       onClick={() => handleAssignStudentClick(student)}
                     >
                       <img src={AssignSvg} alt="Assign" /> Assign
-                    </button>
+                    </button> */}
                   </td>
                 </tr>
               ))}

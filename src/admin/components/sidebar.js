@@ -5,6 +5,7 @@ import DashboardSvg from '../../assets/svg/dashboard.svg';
 import StudentsSvg from '../../assets/svg/students.svg';
 import SubjectsSvg from '../../assets/svg/subjects.svg';
 import AccountsSvg from '../../assets/svg/accounts.svg';
+import CourseSvg from '../../assets/svg/course.svg';
 
 // CSS
 import '../../assets/css/admin/sidebar.css';
@@ -23,18 +24,18 @@ const AdminSidebar = () => {
             <img src={DashboardSvg} alt="Dashboard" />
           </Link>
         </div>
-        <div className='link-group'>
+        {/* <div className='link-group'>
           <Link
             to='/admin/students'
             className={location.pathname === '/admin/students' ? 'active' : ''}
           >
             <img src={StudentsSvg} alt="Students" />
           </Link>
-        </div>
+        </div> */}
         <div className='link-group'>
           <Link
-            to='/admin/subjects'
-            className={location.pathname === '/admin/subjects' ? 'active' : ''}
+            to='/admin/curriculum'
+            className={location.pathname === '/admin/curriculum' ? 'active' : ''}
           >
             <img src={SubjectsSvg} alt="Subjects" />
           </Link>
@@ -44,7 +45,15 @@ const AdminSidebar = () => {
             to='/admin/course'
             className={location.pathname === '/admin/course' ? 'active' : ''}
           >
-            <img src={SubjectsSvg} alt="Course" />
+            <img src={CourseSvg} alt="Course" />
+          </Link>
+        </div>
+        <div className='link-group'>
+          <Link
+            to='/admin/enroll'
+            className={location.pathname === '/admin/enroll' ? 'active' : ''}
+          >
+            <img src={StudentsSvg} alt="Students" />
           </Link>
         </div>
         <div className='link-group'>

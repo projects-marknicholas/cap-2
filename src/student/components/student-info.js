@@ -48,7 +48,7 @@ const StudentInfo = () => {
             </div>
             <div className="data-info">
               <div className="left">Course/Major:</div>
-              <div className="right">BS Information Technology with {userData.curriculum_name}</div>
+              <div className="right">{userData.program}</div>
             </div>
           </div>
         </div>
@@ -62,9 +62,10 @@ const StudentInfo = () => {
             <div className="data-info">
               <div className="left">Academic Year:</div>
               <div className="right">
-                {studentData?.academic_year?.year 
+                {/* {studentData?.academic_year?.year 
                   ? `${parseInt(studentData.academic_year.year) - 1} - ${studentData.academic_year.year}` 
-                  : 'N/A'}
+                  : 'N/A'} */}
+                  {userData.curriculum_year}
               </div>
             </div>
             <div className="data-info">

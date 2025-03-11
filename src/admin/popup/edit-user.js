@@ -1,53 +1,58 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Swal from "sweetalert2";
 import { motion } from "framer-motion";
-import { newUser } from "../../integration/admin";
+import { updateUser } from "../../integration/admin"; 
 
-const AddUserPopup = ({ show, onClose, onUserAdded }) => {
+const EditUserPopup = ({ show, onClose, data, onUserEdit }) => {
   const [formData, setFormData] = useState({
+    user_id: "",
     first_name: "",
     middle_name: "",
     last_name: "",
     email: "",
-    password: "",
-    confirm_password: "",
     role: "",
     program: "",
-    current_year: "",
+    curriculum_year: "",
   });
 
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  // Prefill form when `data` changes
+  useEffect(() => {
+    if (data) {
+      setFormData({
+        user_id: data.user_id || "",
+        first_name: data.first_name || "",
+        middle_name: data.middle_name || "",
+        last_name: data.last_name || "",
+        email: data.email || "",
+        role: data.role || "",
+        program: data.program || "",
+        curriculum_year: data.curriculum_year || "",
+      });
+    }
+  }, [data]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
   };
 
-  const resetForm = () => {
-    setFormData({
-      first_name: "",
-      middle_name: "",
-      last_name: "",
-      email: "",
-      password: "",
-      confirm_password: "",
-      role: "",
-      program: "",
-      current_year: "",
-    });
-  };
-
   const handleSubmit = async () => {
+    if (!formData.user_id) {
+      Swal.fire("Error", "User ID cannot be empty", "error");
+      return;
+    }
+
     setIsSubmitting(true);
 
     try {
-      const result = await newUser(formData);
+      const result = await updateUser({ userData: formData });
 
       if (result.status === "success") {
-        Swal.fire("Success", result.message, "success");
-        resetForm();
+        Swal.fire("Success", "User updated successfully!", "success");
         onClose();
-        onUserAdded();
+        onUserEdit(); 
       } else {
         Swal.fire("Error", result.message, "error");
       }
@@ -68,9 +73,7 @@ const AddUserPopup = ({ show, onClose, onUserAdded }) => {
     <div className={`admin-pop-overlay ${show ? "show" : "hide"}`} role="dialog">
       {show && (
         <>
-          <button className="admin-pop-close" onClick={onClose} aria-label="Close">
-            ×
-          </button>
+          <button className="admin-pop-close" onClick={onClose} aria-label="Close">×</button>
           <motion.div
             className="admin-subject-pop"
             initial={{ opacity: 0, y: 50 }}
@@ -78,7 +81,7 @@ const AddUserPopup = ({ show, onClose, onUserAdded }) => {
             exit={{ opacity: 0, y: 50 }}
             transition={{ duration: 0.3 }}
           >
-            <div className="header">Add New User</div>
+            <div className="header">Edit {data?.first_name}'s Data</div>
             <div className="form-group">
               <div className="form-group-grid2">
                 <label htmlFor="first_name">
@@ -121,26 +124,6 @@ const AddUserPopup = ({ show, onClose, onUserAdded }) => {
                     onChange={handleInputChange}
                   />
                 </label>
-                <label htmlFor="password">
-                  <p>Password</p>
-                  <input
-                    type="password"
-                    id="password"
-                    name="password"
-                    value={formData.password}
-                    onChange={handleInputChange}
-                  />
-                </label>
-                <label htmlFor="confirm_password">
-                  <p>Confirm Password</p>
-                  <input
-                    type="password"
-                    id="confirm_password"
-                    name="confirm_password"
-                    value={formData.confirm_password}
-                    onChange={handleInputChange}
-                  />
-                </label>
                 <label htmlFor="role">
                   <p>Role</p>
                   <select
@@ -170,12 +153,11 @@ const AddUserPopup = ({ show, onClose, onUserAdded }) => {
                         value={formData.program}
                         onChange={handleInputChange}
                       >
-                        <option value="">Select Program</option>
                         <option value="Bachelor of Science in Information Technology">
                           Bachelor of Science in Information Technology
                         </option>
                         <option value="Bachelor of Science in Information Technology with BPO">
-                        Bachelor of Science in Information Technology with BPO
+                          Bachelor of Science in Information Technology with BPO
                         </option>
                         <option value="Bachelor of Science in Information Technology with Specialization in Game Development">
                           Bachelor of Science in Information Technology with Specialization in Game Development
@@ -190,11 +172,12 @@ const AddUserPopup = ({ show, onClose, onUserAdded }) => {
                       exit="exit"
                     >
                       <p>Curriculum Year</p>
-                      <select 
+                      <select
                         id="curriculum_year"
-                        name="curriculum_year" 
-                        value={formData.curriculum_year} 
-                        onChange={handleInputChange}>
+                        name="curriculum_year"
+                        value={formData.curriculum_year}
+                        onChange={handleInputChange}
+                      >
                         <option value="">Select a year</option>
                         {Array.from({ length: 20 }, (_, index) => {
                           const year = new Date().getFullYear() - index;
@@ -212,7 +195,7 @@ const AddUserPopup = ({ show, onClose, onUserAdded }) => {
               </div>
               <div className="admin-sub-pop">
                 <button onClick={handleSubmit} disabled={isSubmitting}>
-                  {isSubmitting ? "Adding..." : "Add User"}
+                  {isSubmitting ? "Updating..." : "Update User"}
                 </button>
               </div>
             </div>
@@ -223,4 +206,4 @@ const AddUserPopup = ({ show, onClose, onUserAdded }) => {
   );
 };
 
-export default AddUserPopup;
+export default EditUserPopup;

@@ -56,11 +56,55 @@
   color: #a19e9e;
 }
 
+.table-holder .table-header .search-filter{
+  margin-left: auto;
+  margin-right: 0;
+}
+.table-holder .table-header .search-filter input,
+.table-holder .table-header .search-filter select{
+  border: 1px solid var(--border);
+  padding: 8px;
+  border-radius: 8px;
+  margin-left: 12px;
+}
+.table-holder .table-header .search-filter button{
+  margin-left: 12px;
+  padding: 8px 12px;
+  border: none;
+  outline: none;
+  border-radius: 8px;
+  cursor: pointer;
+  color: var(--white);
+  background-color: var(--red);
+}
 
 .table-holder .table-scrolling {
   border-top: 1px solid var(--border);
   border-bottom: 1px solid var(--border);
   overflow: auto;
+}
+.table-holder .table-scrolling .table-semester{
+  background-color: var(--border);
+  padding: 8px;
+  font-weight: 600;
+  text-align: center;
+}
+.table-holder .table-scrolling .table-semester span{
+  font-weight: bold;
+  color: var(--white);
+  background-color: var(--red);
+  padding: 8px;
+  border-radius: 5px;
+  display: block;
+}
+.semester-group{
+  border-bottom: 1px solid rgba(0,0,0,0.2);
+}
+.table-holder .table-scrolling .table-units{
+  background-color: var(--border);
+  padding: 8px;
+  font-weight: 600;
+  text-align: center;
 }
 .table-holder .table-scrolling table {
   width: 100%;
@@ -84,6 +128,7 @@
   white-space: nowrap;
   border: none;
   text-align: left;
+  padding: 8px;
 }
 .table-holder .table-scrolling table tbody tr td select{
   padding: 5px 8px;
@@ -191,4 +236,61 @@
   width: fit-content;
   background-color: var(--red);
   color: var(--white);
+}
+.enroll-student-info{
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  padding: 20px;
+}
+.enroll-student-info .enroll-student-info-grid{
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+  width: fit-content;
+  margin-top: 20px;
+}
+.enroll-student-info .enroll-student-info-grid .item span{
+  display: block;
+  font-size: .868em;
+  font-style: italic;
+  opacity: .5;
+}
+.enroll-student-info .enroll-student-info-grid .item input,
+.enroll-student-info .enroll-student-info-grid .item select{
+  width: calc(300px - 24px);
+  padding: 12px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  margin-top: 8px;
+}
+.enroll-student-info .enroll-student-info-grid .item select{
+  width: 300px;
+}
+.enroll-student-info button{
+  margin-top: 12px;
+  padding: 8px 12px;
+  border: none;
+  outline: none;
+  border-radius: 8px;
+  cursor: pointer;
+  color: var(--white);
+  background-color: var(--red);
+}
+.course-list-filters{
+  display: flex;
+  align-items: center;
+}
+.course-list-filters .filter-item label{
+  font-size: .868em;
+  font-style: italic;
+  opacity: .5;
+  margin: 8px;
+}
+.course-list-filters .filter-item select{
+  margin-left: 12px;
+  padding: 8px;
+  border: 1px solid var(--border);
+  margin: 8px;
+  border-radius: 8px;
+  cursor: pointer;
 }

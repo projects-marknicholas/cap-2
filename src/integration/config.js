@@ -30,4 +30,9 @@ export const endpoints = {
   totals: `${BASE_URL}/api/admin/totals`,
   dashboard: `${BASE_URL}/api/admin/dashboard`,
   updateAccountRole: `${BASE_URL}/api/admin/role`,
+  newUser: `${BASE_URL}/api/admin/new`,
+  curriculum: `${BASE_URL}/api/admin/curriculum`,
+  course: `${BASE_URL}/api/admin/course`,
+  courseList: `${BASE_URL}/api/admin/course-list`,
+  requisites: `${BASE_URL}/api/admin/requisites`,
 };
